@@ -6,6 +6,8 @@ Welcome to your coding assignment! This task is designed to assess your skills i
 
 Your assignment is to create a simple To-Do application with a frontend powered by Angular and a backend using Next.js and Prisma. The project is divided into two main folders: `frontend` and `backend`.
 
+You are expected to download or clone this project, create your own private git repo and add matheus@destcert.com as a member. 
+
 ### Frontend
 
 - The `frontend` folder contains a starter application built with Angular.
@@ -21,10 +23,12 @@ Your assignment is to create a simple To-Do application with a frontend powered 
 - The `backend` folder includes a starter application with Next.js.
 - You are expected to set up the logic for handling To-Do operations in the backend and integrating Prisma for the database communication.
 - Use Next.js exclusively for the backend. Do not use it for frontend development.
+- Use the API route provided in `src/app/api/hello/route.ts` as a starting point example for creating your own API.
+- Be mindful of Restful operations. Use GET/POST/PUT/DELETE methods accordingly for handling CRUD and other operations.
 
 ## Database Setup
 
-- Sign up for a free account at [PlanetScale](https://planetscale.com/).
+- Sign up for a free account at [PlanetScale](https://planetscale.com/). or research another free MySQL database provider.
 - Create a MySQL database on PlanetScale.
 - Integrate the database with your Next.js backend using Prisma.
 - You will find documentation on integrating PlanetScale, Prisma, and Next.js, which you should research and follow.
