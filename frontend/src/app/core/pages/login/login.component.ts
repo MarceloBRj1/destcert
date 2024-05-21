@@ -26,8 +26,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   onLogin() {
-    this.authService.login(this.loginForm.value).subscribe((res) => {
-      this._router.navigate(['/todo']);
-    })
+    this.authService.login(this.loginForm.value).subscribe(
+      (res) => {
+        console.log('Login success:', res);
+        const { token, userId } = res;
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+        this._router.navigateByUrl('/todo');
+      },
+      (error) => {
+        console.error('Error while logging in:', error);
+      }
+    );
   }
 }

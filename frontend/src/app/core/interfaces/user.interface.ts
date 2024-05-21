@@ -4,9 +4,9 @@ export interface CreateUserRequestDto {
   password: string;
 }
 export interface CreateUserResponseDto {
-  id: number;
-  name: string;
+  name: any;
   email: string;
+  password: string;
 }
 
 export interface UserResponseDto extends CreateUserResponseDto {}

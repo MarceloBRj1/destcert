@@ -1,8 +1,9 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   headers() {
     return [
       {
-        source: '/:path*', // A rota que deseja permitir CORS
+        source: '/api/:path*', 
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" }, 
