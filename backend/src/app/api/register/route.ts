@@ -1,29 +1,40 @@
-import prisma
- from '../../../../lib/prisma';
+import prisma from '../../../../lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
+import { SignJWT } from 'jose';
 
-export const POST = async (_request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
-    const { email, password, username } = await _request.json();
-    const existingUser = await prisma.user.findUnique({
-      where: { email }
+    const { email, password } = await request.json();
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
-    
-    if (existingUser) {
-      return new NextResponse(JSON.stringify({ error: 'Email already exists' }), { status: 400 });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        email: email,
-        name: username,
-        password: hashedPassword,
-      }
-    })
 
-    return new NextResponse(JSON.stringify(newUser), { status: 200 });
+    if (!user) {
+      return new NextResponse(JSON.stringify({ error: 'Invalid credentials' }), { status: 401 });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return new NextResponse(JSON.stringify({ error: 'Invalid credentials' }), { status: 401 });
+    }
+
+    const payload = {
+      userId: user.id,
+      userEmail: user.email,
+    };
+
+    const token = await new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+      .setIssuedAt()
+      .setExpirationTime('1h')
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+
+    return new NextResponse(
+      JSON.stringify({ token, userId: user.id }),
+      { status: 200 }
+    );
   } catch (error) {
-    return new NextResponse(JSON.stringify({ error: 'Failed to create user' }), { status: 500 });
+    return new NextResponse(JSON.stringify({ error: 'Failed to login' }), { status: 500 });
   }
 };

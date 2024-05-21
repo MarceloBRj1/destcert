@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { JwtService } from '../../services/jwt.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private _router: Router,
     private authService: AuthService,
+    private jwtService: JwtService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -30,12 +32,13 @@ export class LoginComponent implements OnInit {
       (res) => {
         console.log('Login success:', res);
         const { token, userId } = res;
-        localStorage.setItem('token', token);
+        this.jwtService.token = token;
         localStorage.setItem('userId', userId);
         this._router.navigateByUrl('/todo');
       },
       (error) => {
         console.error('Error while logging in:', error);
+        alert('Invalid credentials');
       }
     );
   }
