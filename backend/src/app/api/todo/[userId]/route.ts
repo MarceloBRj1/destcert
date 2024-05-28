@@ -6,17 +6,24 @@ import { StatusCodes } from 'http-status-codes';
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const userId = url.pathname.split('/').pop();
+  const searchTerm = url.searchParams.get('search');
 
   if (!userId) {
     return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
   }
 
   try {
+    let whereClause: any = {
+      userId: Number(userId),
+      deleted: false,
+    };
+
+    if (searchTerm) {
+      whereClause.name = { contains: searchTerm };
+    }
+
     const todos = await prisma.todo.findMany({
-      where: {
-        userId: Number(userId),
-        deleted: false,
-      },
+      where: whereClause,
     });
 
     if (!todos || todos.length === 0) {
@@ -58,7 +65,6 @@ export async function DELETE(request: NextRequest) {
   const urlParts = request.url.split('/');
   const todoIdIndex = urlParts.indexOf('todo') + 1;
   const todoId = parseInt(urlParts[todoIdIndex]);
-
   try {
     const todo = await prisma.todo.findUnique({
       where: {
@@ -79,6 +85,29 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('Error deleting todo:', error);
     return NextResponse.json({ error: 'Failed to delete todo' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  const urlParts = request.url.split('/');
+  const todoIdIndex = urlParts.indexOf('todo') + 1;
+  const todoId = parseInt(urlParts[todoIdIndex]);
+
+  try {
+    const { name, completed } = await request.json();
+
+    const updatedTodo = await prisma.todo.update({
+      where: { id: todoId },
+      data: {
+        name,
+        completed,
+      },
+    });
+
+    return NextResponse.json(updatedTodo, { status: 200 });
+  } catch (error) {
+    console.error('Error updating todo:', error);
+    return NextResponse.json({ error: 'Failed to update todo' }, { status: 500 });
   }
 }
 

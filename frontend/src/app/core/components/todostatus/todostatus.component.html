@@ -1,36 +1,71 @@
-<form [formGroup]="todoForm" (ngSubmit)="addTodo()" class="mt-8">
-  <div class="flex flex-col">
-    <label for="name" class="text-sm font-semibold">Todo Name:</label>
+<form [formGroup]="todoForm" (ngSubmit)="addTodo()" class="mt-8 mx-auto max-w-md">
+  <div class="mb-4">
+    <label for="name" class="block text-sm font-semibold">Write a New Todo:</label>
     <input id="name" formControlName="name" required
-           class="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500">
+           class="mt-1 px-3 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500">
   </div>
 
-  <div class="mt-4 flex items-center">
-    <input id="completed" type="checkbox" formControlName="completed"
-           class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-    <label for="completed" class="ml-2 text-sm font-semibold">Concluded?
+  <div class="flex items-center mb-4">
+    <label for="completed" class="text-sm font-semibold">Status
     </label>
-  </div>
+    <input id="completed" type="checkbox" formControlName="completed"
+           class="rounded border-gray-300 text-indigo-600 ml-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+    </div>
 
   <button type="submit"
-          class="mt-4 px-4 py-2 bg-lime-600 border border-transparent rounded-md text-white font-semibold hover:bg-lime-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+          class="px-4 py-2 bg-lime-600 border border-transparent rounded-md text-white font-semibold hover:bg-lime-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
     Add Task
   </button>
 </form>
-
-<div *ngIf="loading" class="text-gray-600">Loading...</div>
-
-<div *ngIf="!loading && hasTodos">
-  <ul class="divide-y divide-gray-200">
-    <li *ngFor="let todo of todos" class="py-4 ">
-      <h3 class="text-lg font-semibold">{{ todo.name }}</h3>
-      <p class="text-sm text-gray-600">Finished: {{ todo.completed ? 'Yes' : 'No' }}</p>
-      <button class="text-sm font-semibold text-red-500 hover:text-red-700" (click)="deleteTodo(todo.id)">Delete</button>
-    </li>
-  </ul>
+<div class="mt-8 mx-auto max-w-md">
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search tasks..." (input)="filterTodos()"
+         class="mb-4 px-3 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500">
 </div>
 
 <div *ngIf="!loading && !hasTodos" class="text-gray-600">
-  <p>No todo found for this user.</p>
+  <h1 class="text-3xl font-mono text-center mt-10">You don't have any tasks yet.</h1>
 </div>
 
+<mat-spinner *ngIf="loading" class="absolute top-1/2 left-1/2"></mat-spinner>
+
+<div *ngIf="!loading && hasTodos" class="grid grid-cols-1 lg:grid-cols-4 lg:gap-8 mt-10 ml-10 mr-10">
+  <div *ngFor="let todo of filteredTodos" class="flex flex-col justify-between bg-gray-100 p-4 rounded-md shadow-md hover:bg-slate-300 cursor-pointer">
+    <div class="flex flex-col">
+      <h3 class="text-3xl font-semibold">{{ todo.name }}</h3>
+      <p class="text-sm text-gray-600 mt-8">Status: {{ todo.completed ? 'Finished' : 'In progress' }}</p>
+    </div>
+    <div class="flex justify-end">
+      <button class="text-sm font-semibold text-red-500 hover:text-red-700 hover:underline mr-2" (click)="deleteTodo(todo.id)">Delete</button>
+      <button class="text-sm font-semibold text-blue-500 hover:underline hover:text-blue-700" (click)="editTodo(todo)">Edit</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="showEditForm">
+  <form [formGroup]="editTodoForm" (ngSubmit)="updateTodo()" class="mt-8 mx-auto max-w-md">
+    <div class="mb-4">
+      <label for="editName" class="block text-sm font-semibold">Todo Name:</label>
+      <input id="editName" formControlName="name"
+             class="mt-1 px-3 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500">
+    </div>
+
+    <div class="flex items-center mb-4">
+      <label for="editCompleted" class="ml-2 mr-2 text-sm font-semibold">Done?
+     </label>
+      <input id="editCompleted" type="checkbox" formControlName="completed"
+             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+    </div>
+
+    <div class="flex justify-between">
+      <button type="submit"
+              class="px-4 py-2 bg-lime-600 border border-transparent rounded-md text-white font-semibold hover:bg-lime-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        Update Task
+      </button>
+      <button type="button" (click)="cancelEdit()"
+              class="px-4 py-2 bg-gray-300 border border-transparent rounded-md text-gray-700 font-semibold hover:bg-gray-400 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

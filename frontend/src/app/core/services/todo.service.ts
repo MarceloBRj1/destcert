@@ -9,7 +9,7 @@ export class TodoService {
   private apiUrl = 'http://localhost:3000';
   constructor(private http : HttpClient) { }
 
-  getTodosById(userId: string): Observable<any[]> {
+  getTodosById(userId: string, searchTerm: string = ''): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/api/todo/${userId}`);
   }
   getTodos(userId: number): Observable<any> {
@@ -20,5 +20,8 @@ export class TodoService {
   }
   deleteTodo(todoId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/api/todo/${todoId}`);
+  }
+  updateTodo(todoId: number, updatedTodo: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/api/todo/${todoId}`, updatedTodo);
   }
 }
