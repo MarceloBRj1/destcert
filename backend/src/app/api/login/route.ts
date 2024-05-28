@@ -5,7 +5,6 @@ import { compare } from 'bcrypt';
 import { SignJWT } from 'jose';
 
 
-
 export const POST = async (request: NextRequest) => {
   try {
     const { email, password } = await request.json();
