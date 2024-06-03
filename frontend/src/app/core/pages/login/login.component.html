@@ -7,11 +7,9 @@
           <li>
             <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> About </a>
           </li>
-
           <li>
             <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
           </li>
-
           <li>
             <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
           </li>
@@ -20,10 +18,7 @@
 
       <div class="flex items-center gap-4">
         <div class="sm:flex sm:gap-4">
-          <a
-            class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block"
-            href="#"
-          >
+          <a class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block" href="#">
             Register
           </a>
         </div>
@@ -32,42 +27,32 @@
   </div>
 </header>
 
-<div class="flex items-center justify-center min-h-screen bg-gray-100">
+<div class="flex items-center justify-center h-4/5 bg-gray-100">
   <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
     <h2 class="text-2xl font-bold text-center">Login</h2>
-    <form [formGroup]="loginForm" (submit)="onLogin()" >
+    <form *ngIf="!loading" [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <div class="mb-4">
         <label class="block mb-2 text-sm font-bold text-gray-700" for="email">
           Email
         </label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          class="w-full px-3 py-2 border rounded"
-          placeholder="Enter your email"
-        />
+        <input type="email" id="email" formControlName="email" class="w-full px-3 py-2 border rounded" placeholder="Enter your email" />
       </div>
       <div class="mb-6">
         <label class="block mb-2 text-sm font-bold text-gray-700" for="password">
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          class="w-full px-3 py-2 border rounded"
-          placeholder="Enter your password"
-        />
+        <input type="password" id="password" formControlName="password" class="w-full px-3 py-2 border rounded" placeholder="Enter your password" />
       </div>
       <div class="flex items-center justify-between">
-        <button
-          type="submit"
-          class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block"
-        >
+        <button type="submit" class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block">
           Login
         </button>
       </div>
     </form>
+    <div *ngIf="loading" class="flex justify-center">
+      <mat-spinner></mat-spinner>
+    </div>
   </div>
 </div>
+
+<app-footer></app-footer>

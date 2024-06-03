@@ -1,89 +1,61 @@
-<div class="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-  <h1 class="text-3xl font-mono">todo<span class="text-lime-500">IT</span></h1>
-<div class="flex flex-1 items-center justify-end md:justify-between">
-  <nav aria-label="Global" class="hidden md:block">
-    <ul class="flex items-center gap-6 text-sm">
-      <li>
-        <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> About </a>
-      </li>
-
-      <li>
-        <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
-      </li>
-
-      <li>
-        <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="flex items-center gap-4">
-    <div class="sm:flex sm:gap-4">
-      <a
-        class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block"
-        href="/login"
-      >
-        Login
-      </a>
-    </div>
+<div class="flex items-center justify-center h-4/5 bg-gray-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+    <h2 class="text-2xl font-bold text-center">Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister($event)">
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="username">
+          Username
+        </label>
+        <input
+          id="username"
+          formControlName="username"
+          class="w-full px-3 py-2 border rounded"
+          placeholder="Enter your username"
+        />
+        <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="text-red-500">
+          Username is required.
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="email">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="w-full px-3 py-2 border rounded"
+          placeholder="Enter your email"
+        />
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-red-500">
+          <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</div>
+          <div *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format.</div>
+        </div>
+      </div>
+      <div class="mb-6">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="password">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="w-full px-3 py-2 border rounded"
+          placeholder="Enter your password"
+        />
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-red-500">
+          <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long.</div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <button
+          type="submit"
+          class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100"
+        >
+          Register
+        </button>
+      </div>
+    </form>
   </div>
 </div>
-</div>
-<form
-  class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 min-w-96 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-  (submit)="onRegister($event)"
->
-  <div class="mb-4">
-    <label class="block text-slate-700 text-sm font-bold mb-2" for="username">
-      Username
-    </label>
-    <input
-      class="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-      id="username"
-      type="text"
-      name="username"
-      placeholder="Username"
-    />
-  </div>
-  <div class="mb-4">
-    <label class="block text-slate-700 text-sm font-bold mb-2" for="email">
-      Email
-    </label>
-    <input
-      class="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-      id="email"
-      type="email"
-      name="email"
-      placeholder="someone@mail.com"
-    />
-  </div>
-  <div class="mb-6">
-    <label class="block text-slate-700 text-sm font-bold mb-2" for="password">
-      Password
-    </label>
-    <input
-      class="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline"
-      id="password"
-      type="password"
-      name="password"
-      placeholder="******"
-    />
-  </div>
-  <div class="flex flex-col gap-6">
-    <button
-      class="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600 transition hover:bg-lime-100 sm:block"
-      type="submit"
-    >
-      Sign Up
-    </button>
-    <p class="text-sm">
-      <span>Already have an account?&nbsp;</span>
-      <a
-        class="font-bold text-teal-600 hover:text-teal-800 hover:cursor-pointer hover:underline"
-        [routerLink]="['/login']"
-      >
-        Sign in
-      </a>
-    </p>
-  </div>
-</form>
